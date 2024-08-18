@@ -8,10 +8,10 @@ from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.docstore.document import Document
+import streamlit as st
 
 # Load environment variables
-load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
+api_key = st.secrets["GOOGLE_API_KEY"]
 
 # Initialize LLM and embeddings
 llm = GooglePalm(google_api_key=api_key, temperature=0.2)
