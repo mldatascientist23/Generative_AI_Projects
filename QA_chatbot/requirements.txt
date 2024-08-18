@@ -1,9 +1,0 @@
-langchain
-streamlit
-tiktoken
-faiss-cpu
-protobuf
-google-generativeai
-langchain-community
-InstructorEmbedding
-sentence-transformers==2.2.2
