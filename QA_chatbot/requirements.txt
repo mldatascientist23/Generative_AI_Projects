@@ -1,4 +1,5 @@
 langchain
+pandas
 streamlit
 tiktoken
 faiss-cpu
