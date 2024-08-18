@@ -8,6 +8,9 @@ import streamlit as st
 import nltk
 import os
 
+# Download WordNet
+nltk.download('wordnet')
+
 # Download WordNet if not already downloaded
 try:
     nltk.data.find('corpora/wordnet')
