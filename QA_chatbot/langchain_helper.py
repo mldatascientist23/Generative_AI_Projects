@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 from io import StringIO
-from dotenv import load_dotenv
 from langchain.vectorstores import FAISS
 from langchain.llms import GooglePalm
 from langchain.embeddings import HuggingFaceInstructEmbeddings
