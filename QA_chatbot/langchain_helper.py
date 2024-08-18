@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from dotenv import load_dotenv
+from streamlit as st
 from langchain.vectorstores import FAISS
 from langchain.llms import GooglePalm
 from langchain.embeddings import HuggingFaceInstructEmbeddings
@@ -9,8 +9,8 @@ from langchain.chains import RetrievalQA
 from langchain.docstore.document import Document
 
 # Load environment variables
-load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
+
+api_key = st.secrets("GOOGLE_API_KEY")
 
 # Initialize LLM and embeddings
 llm = GooglePalm(google_api_key=api_key, temperature=0.2)
