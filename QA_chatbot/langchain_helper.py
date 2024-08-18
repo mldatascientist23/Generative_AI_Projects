@@ -1,3 +1,9 @@
+import nltk
+
+# Download required NLTK data
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+
 import os
 import pandas as pd
 from io import StringIO
