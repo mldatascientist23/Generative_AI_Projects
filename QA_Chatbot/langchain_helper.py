@@ -5,7 +5,15 @@ from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 import streamlit as st
+import nltk
 import os
+
+# Download WordNet if not already downloaded
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    nltk.download('wordnet')
+
 
 # Retrieve the API key from the secrets file
 api_key = st.secrets["GOOGLE_API_KEY"]
