@@ -8,3 +8,4 @@ langchain-community
 InstructorEmbedding
 sentence-transformers==2.2.2
 nltk==3.9.1
+streamlit_chat
