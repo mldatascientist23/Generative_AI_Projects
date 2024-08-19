@@ -1,5 +1,5 @@
 langchain
-streamlit
+streamlit 1.37.1
 tiktoken
 faiss-cpu
 protobuf
