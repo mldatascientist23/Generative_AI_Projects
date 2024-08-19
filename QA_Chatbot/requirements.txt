@@ -7,4 +7,4 @@ google-generativeai
 langchain-community
 InstructorEmbedding
 sentence-transformers==2.2.2
-nltk
+nltk==3.9.1
