@@ -6,7 +6,7 @@
 This project is an end-to-end LLM-based Q&A system using Google Palm and Langchain, designed for an e-learning platform. The chatbot provides a Streamlit-based user interface where students can upload a CSV file of FAQs, create a knowledge base, and ask questions to receive instant answers.
 
 ## Project Highlights
-- **Live Demo:** [Link to Streamlit App](https://https://question-answer-csv-chatbot.streamlit.app/)
+- **Live Demo:** [Link to Streamlit App](https://question-answer-csv-chatbot.streamlit.app/)
 - **Use Case:** The system uses a real CSV file of FAQs to assist users. The LLM-based Q&A system reduces the workload of human staff by answering questions automatically.
 - **Technology Stack:** 
   - Langchain + Google Palm for LLM-based Q&A
