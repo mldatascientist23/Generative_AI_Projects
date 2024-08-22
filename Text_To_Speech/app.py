@@ -6,8 +6,18 @@ from datasets import load_dataset
 import io
 
 # Set up the text-to-speech pipeline
-synthesiser = pipeline("text-to-speech", model="microsoft/speecht5_tts")
-embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+try:
+    synthesiser = pipeline("text-to-speech", model="microsoft/speecht5_tts")
+except Exception as e:
+    st.error(f"Error initializing the TTS pipeline: {e}")
+    st.stop()
+
+# Load embeddings dataset
+try:
+    embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+except Exception as e:
+    st.error(f"Error loading the embeddings dataset: {e}")
+    st.stop()
 
 # Define the voice options and their corresponding speaker embeddings
 voice_options = {
@@ -60,21 +70,25 @@ if st.sidebar.button("Generate Speech"):
     else:
         st.write("Processing...")
         speaker_embedding = voice_options[voice_choice]
-        speech = synthesiser(text_input, forward_params={"speaker_embeddings": speaker_embedding})
+        
+        try:
+            speech = synthesiser(text_input, forward_params={"speaker_embeddings": speaker_embedding})
 
-        # Convert the waveform to bytes
-        audio_bytes_io = io.BytesIO()
-        sf.write(audio_bytes_io, speech["audio"], samplerate=speech["sampling_rate"], format='WAV')
-        audio_bytes_io.seek(0)
+            # Convert the waveform to bytes
+            audio_bytes_io = io.BytesIO()
+            sf.write(audio_bytes_io, speech["audio"], samplerate=speech["sampling_rate"], format='WAV')
+            audio_bytes_io.seek(0)
 
-        st.write("Processing has been completed!")
-        st.subheader("🎧 Resulting Audio")
-        st.audio(audio_bytes_io, format="audio/wav")
+            st.write("Processing has been completed!")
+            st.subheader("🎧 Resulting Audio")
+            st.audio(audio_bytes_io, format="audio/wav")
 
-        # Add download button
-        st.download_button(
-            label="⬇️ Download Audio",
-            data=audio_bytes_io,
-            file_name="speech.wav",
-            mime="audio/wav"
-        )
+            # Add download button
+            st.download_button(
+                label="⬇️ Download Audio",
+                data=audio_bytes_io,
+                file_name="speech.wav",
+                mime="audio/wav"
+            )
+        except Exception as e:
+            st.error(f"Error generating speech: {e}")
