@@ -6,7 +6,7 @@ Welcome to the Text-to-Speech Converter! This app allows you to convert text int
 
 Check out the live demo of the app on Streamlit:
 
-🔗 [Text-to-Speech Converter on Streamlit](https://TextToSpeech-app.streamlit.app/)
+🔗 [Text-to-Speech Converter on Streamlit](https://text-to-speech-chatbot.streamlit.app/)
 
 ## 📂 GitHub Repository
 
