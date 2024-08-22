@@ -1,80 +1,72 @@
 import streamlit as st
-from transformers import pipeline
+from transformers import SpeechT5Processor, SpeechT5ForTextToSpeech, SpeechT5HifiGan
 import torch
-import soundfile as sf
 from datasets import load_dataset
+import soundfile as sf
 import io
 
-# Set up the text-to-speech pipeline
-synthesiser = pipeline("text-to-speech", model="microsoft/speecht5_tts")
-embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+# Load the processor and model
+processor = SpeechT5Processor.from_pretrained("microsoft/speecht5_tts")
+model = SpeechT5ForTextToSpeech.from_pretrained("microsoft/speecht5_tts")
+vocoder = SpeechT5HifiGan.from_pretrained("microsoft/speecht5_hifigan")
 
-# Define the voice options and their corresponding speaker embeddings
-voice_options = {
-    "Male": torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0),
-    "Female": torch.tensor(embeddings_dataset[7300]["xvector"]).unsqueeze(0),
-}
+# Load speaker embeddings dataset
+embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
+
+def generate_speech(text, voice_type):
+    inputs = processor(text=text, return_tensors="pt")
+    
+    # Select speaker embedding based on voice type
+    if voice_type == "Male":
+        speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
+    else:
+        speaker_embeddings = torch.tensor(embeddings_dataset[10880]["xvector"]).unsqueeze(0)
+    
+    speech = model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
+    
+    # Convert speech to bytes
+    audio_bytes_io = io.BytesIO()
+    sf.write(audio_bytes_io, speech.numpy(), samplerate=16000, format='WAV')
+    audio_bytes_io.seek(0)
+
+    return audio_bytes_io
 
 # Streamlit UI
-st.set_page_config(page_title="🗣️ Text-to-Speech Converter", layout="wide")
-
-# Add colored header with LinkedIn link above the main title
 st.markdown(
     """
-    <style>
-    .header {
-        font-size: 16px;
-        font-weight: bold;
-        color: #2E86C1;
-        text-align: center;
-        margin-top: 20px;
-    }
-    .header a {
-        color: #28B463;
-        text-decoration: none;
-    }
-    </style>
+    <div style="text-align: center;">
+        <h2 style="color: #FF5733;">Created by Engr. Hamesh Raj</h2>
+        <a href="https://www.linkedin.com/in/datascientisthameshraj/" target="_blank" style="color: #FF5733;">LinkedIn Profile</a>
+    </div>
     """,
     unsafe_allow_html=True
 )
 
-st.markdown(
-    '<div class="header">Created by <a href="https://www.linkedin.com/in/datascientisthameshraj/" target="_blank">Engr. Hamesh Raj</a></div>',
-    unsafe_allow_html=True
-)
-
-# Main title
 st.title("🗣️ Text-to-Speech Converter")
+st.write("Enter text below, select voice type, and click 'Generate Speech' to convert it to audio.")
 
-# Sidebar for text input with placeholder
-st.sidebar.title("Input Text")
-text_input = st.sidebar.text_area("Enter text here:", placeholder="Type something to convert to speech...")
+# Sidebar for user input
+with st.sidebar:
+    st.header("Input Options")
+    text_input = st.text_area("Text to convert:", "Some example text in the English language")
+    voice_type = st.selectbox("Select Voice:", ["Male", "Female"])
+    submit_button = st.button("Generate Speech")
 
-# Voice selection dropdown
-voice_choice = st.sidebar.selectbox("Select Voice:", options=list(voice_options.keys()))
-
-# Button to generate speech
-if st.sidebar.button("Generate Speech"):
-    if not text_input.strip():
-        st.sidebar.error("⚠️ Please enter some text to convert to speech!")
+# Process the input and generate speech
+if submit_button:
+    if text_input:
+        with st.spinner("Generating speech..."):
+            audio_bytes_io = generate_speech(text_input, voice_type)
+            st.audio(audio_bytes_io, format="audio/wav")
+            st.write("Process completed!")
+            
+            # Provide a download link for the generated audio
+            st.download_button(
+                label="Download Audio",
+                data=audio_bytes_io,
+                file_name="generated_speech.wav",
+                mime="audio/wav"
+            )
     else:
-        st.write("Processing...")
-        speaker_embedding = voice_options[voice_choice]
-        speech = synthesiser(text_input, forward_params={"speaker_embeddings": speaker_embedding})
-
-        # Convert the waveform to bytes
-        audio_bytes_io = io.BytesIO()
-        sf.write(audio_bytes_io, speech["audio"], samplerate=speech["sampling_rate"], format='WAV')
-        audio_bytes_io.seek(0)
-
-        st.write("Processing has been completed!")
-        st.subheader("🎧 Resulting Audio")
-        st.audio(audio_bytes_io, format="audio/wav")
-
-        # Add download button
-        st.download_button(
-            label="⬇️ Download Audio",
-            data=audio_bytes_io,
-            file_name="speech.wav",
-            mime="audio/wav"
-        )
+        st.error("Please enter some text.")
