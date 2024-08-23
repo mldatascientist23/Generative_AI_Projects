@@ -6,7 +6,7 @@ from datasets import load_dataset
 import io
 
 # Set up the text-to-speech pipeline
-synthesiser = pipeline("text-to-speech", model="microsoft/speecht5_tts")
+synthesizer = pipeline("text-to-speech", model="microsoft/speecht5_tts")
 embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
 
 # Define the voice options and their corresponding speaker embeddings
@@ -60,7 +60,7 @@ if st.sidebar.button("Generate Speech"):
     else:
         st.write("Processing...")
         speaker_embedding = voice_options[voice_choice]
-        speech = synthesiser(text_input, forward_params={"speaker_embeddings": speaker_embedding})
+        speech = synthesizer(text_input, speaker_embeddings=speaker_embedding)
 
         # Convert the waveform to bytes
         audio_bytes_io = io.BytesIO()
