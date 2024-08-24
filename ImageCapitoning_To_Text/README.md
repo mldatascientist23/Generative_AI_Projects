@@ -6,7 +6,7 @@ Welcome to the Image Captioning App! This app generates descriptive captions for
 
 Check out the live demo of the app on Streamlit:
 
-🔗 [Image Captioning App on Streamlit](https://your-streamlit-app-link)
+🔗 [Image Captioning App on Streamlit](https://image-captioning-to-text.streamlit.app/)
 
 ## 📂 GitHub Repository
 
