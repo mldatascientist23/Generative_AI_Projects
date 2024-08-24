@@ -1,4 +1,0 @@
-streamlit
-diffusers
-torch
-transformers
