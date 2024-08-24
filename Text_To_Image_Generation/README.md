@@ -6,7 +6,7 @@ Welcome to the Text-to-Image Generator app! This Streamlit app allows you to gen
 
 Check out the live demo of the app on Streamlit:
 
-🔗 [Text-to-Image Generator on Streamlit](https://image-captioning-to-text.streamlit.app/)
+🔗 [Text-to-Image Generator on Streamlit](https://text-to-image-generation.streamlit.app/)
 
 ## 📂 GitHub Repository
 
