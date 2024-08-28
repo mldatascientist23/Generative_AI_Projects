@@ -44,7 +44,7 @@ if uploaded_file is not None:
             fps = video.get(cv2.CAP_PROP_FPS)
 
             # Define codec and create VideoWriter object
-            fourcc = cv2.VideoWriter_fourcc(*'avc1')
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             out = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
 
             while video.isOpened():
@@ -78,8 +78,7 @@ if uploaded_file is not None:
             st.success("Video processing complete.")
 
             # Display the processed video in the output section
-            video_file = open(output_path, "rb").read()
-            st.video(video_file)
+            st.video(output_path)
 
             # Provide download link for the processed video
             with open(output_path, "rb") as file:
@@ -93,3 +92,5 @@ if uploaded_file is not None:
         # Clean up the temporary files
         if os.path.exists(temp_video_path):
             os.remove(temp_video_path)
+        if os.path.exists(output_path):
+            os.remove(output_path)
