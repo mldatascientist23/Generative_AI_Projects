@@ -1,4 +1,7 @@
-streamlit
-ultralytics
 opencv-python
+libgl1-mesa-glx
+libglib2.0-0
+streamlit
+opencv-python-headless
+ultralytics
 numpy
