@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 import os
+from moviepy.editor import VideoFileClip
 
 # Header
 st.markdown("Created by: [Engr. Hamesh Raj](https://www.linkedin.com/in/datascientisthameshraj/)")
@@ -44,8 +45,8 @@ if uploaded_file is not None:
             fps = video.get(cv2.CAP_PROP_FPS)
 
             # Define codec and create VideoWriter object
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            out = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
+            fourcc = cv2.VideoWriter_fourcc(*'avc1')
+            out = cv2.VideoWriter("no_audio.mp4", fourcc, fps, (frame_width, frame_height))
 
             while video.isOpened():
                 ret, frame = video.read()
@@ -75,10 +76,18 @@ if uploaded_file is not None:
             video.release()
             out.release()
 
+            # Add audio back to the processed video
+            clip = VideoFileClip(temp_video_path)
+            audio = clip.audio
+            video = VideoFileClip("no_audio.mp4")
+            final = video.set_audio(audio)
+            final.write_videofile(output_path, codec="libx264")
+
             st.success("Video processing complete.")
 
             # Display the processed video in the output section
-            st.video(output_path)
+            video_file = open(output_path, "rb").read()
+            st.video(video_file)
 
             # Provide download link for the processed video
             with open(output_path, "rb") as file:
@@ -92,5 +101,5 @@ if uploaded_file is not None:
         # Clean up the temporary files
         if os.path.exists(temp_video_path):
             os.remove(temp_video_path)
-        if os.path.exists(output_path):
-            os.remove(output_path)
+        if os.path.exists("no_audio.mp4"):
+            os.remove("no_audio.mp4")
