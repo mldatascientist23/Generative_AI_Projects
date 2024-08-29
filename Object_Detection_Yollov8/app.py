@@ -4,6 +4,11 @@ import numpy as np
 from ultralytics import YOLO
 from moviepy.editor import VideoFileClip
 import os
+import subprocess
+
+# Install system dependencies dynamically (for environments like Streamlit Cloud)
+subprocess.run(['apt-get', 'update'])
+subprocess.run(['apt-get', 'install', '-y', 'libgl1-mesa-glx'])
 
 # Header
 st.markdown("Created by: [Engr. Hamesh Raj](https://www.linkedin.com/in/datascientisthameshraj/)")
