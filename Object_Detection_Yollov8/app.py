@@ -27,15 +27,14 @@ if uploaded_file is not None:
         # Save the uploaded video to a temporary file
         temp_video_path = "temp_video.mp4"
         output_path = "processed_video.mp4"
-        
+
         # Ensure the temp file is written only once
-        if not os.path.exists(temp_video_path):
-            with open(temp_video_path, "wb") as f:
-                f.write(uploaded_file.getbuffer())
+        with open(temp_video_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
 
         # Use MoviePy to handle video processing
         def process_frame(frame):
-            # Convert frame to RGB
+            # Convert frame to RGB for YOLO
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             results = model(frame)
             for result in results:
