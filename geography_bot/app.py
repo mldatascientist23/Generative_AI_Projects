@@ -9,7 +9,7 @@ def get_base64_of_bin_file(bin_file):
     return base64.b64encode(data).decode()  # Return after file is read
 
 # Load the background image
-background_image_path = r"https://github.com/mldatascientist23/Generative_AI_Projects/blob/main/geography_bot/map.webp"
+background_image_path = 'assets/map.webp'
 background_image = get_base64_of_bin_file(background_image_path)
 
 # Set up common styles for both pages
@@ -172,8 +172,8 @@ def home_page():
 
     # Define member names and image URLs
     members = [
-        {"name": "Saad Asghar Ali - ID: 978", "image": r"https://github.com/mldatascientist23/Generative_AI_Projects/blob/main/geography_bot/saad.jpg"},
-        {"name": "Hamesh Raj - ID: 2592", "image": r"https://github.com/mldatascientist23/Generative_AI_Projects/blob/main/geography_bot/raj.jpg"},
+        {"name": "Saad Asghar Ali - ID: 978", "image": 'assets/saad.jpg'},
+        {"name": "Hamesh Raj - ID: 2592", "image": 'assets/raj.jpg'},
         {"name": "Mir khalil ur Rehman - 1145", "image": "https://via.placeholder.com/100"}
     ]
 
