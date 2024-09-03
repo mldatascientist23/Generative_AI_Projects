@@ -1,0 +1,6 @@
+fpdf
+groq
+gradio
+pymupdf
+pillow
+pytesseract
