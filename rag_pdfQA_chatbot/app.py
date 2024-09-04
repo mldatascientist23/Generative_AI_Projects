@@ -39,37 +39,43 @@ if st.sidebar.button("Submit"):
                 text = page.extract_text()
                 pdf_text += text + "\n"
 
-        # Define the prompt format for the model
-        prompt = """
-        ### Instruction and Input:
-        Based on the following context/document:
-        {}
-        Please answer the question: {}
+        # Chunk the text to fit within model limits
+        max_chunk_size = 2000  # Adjust as needed for your model's token limit
+        chunks = [pdf_text[i:i + max_chunk_size] for i in range(0, len(pdf_text), max_chunk_size)]
 
-        ### Response:
-        {}
-        """
+        responses = []
+        for chunk in chunks:
+            prompt = f"""
+            {chunk}
+            
+            Please answer the question: {query}
 
-        # Format the input text
-        input_text = prompt.format(pdf_text, query, " ")
+            """
 
-        # Encode the input text into input ids
-        input_ids = tokenizer(input_text, return_tensors="pt")
+            # Encode the input text into input ids
+            input_ids = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=2048)
 
-        # Use GPU for input ids if available
-        if torch.cuda.is_available():
-            input_ids = input_ids.to("cuda")
+            # Use GPU for input ids if available
+            if torch.cuda.is_available():
+                input_ids = input_ids.to("cuda")
 
-        # Generate text using the model
-        outputs = model.generate(
-            **input_ids,
-            max_new_tokens=500,  # Limit the number of tokens generated
-            no_repeat_ngram_size=5,  # Prevent repetition of 5-gram phrases
-        )
+            # Generate text using the model
+            outputs = model.generate(
+                **input_ids,
+                max_new_tokens=250,  # Reduce the number of tokens generated
+                no_repeat_ngram_size=3,  # Adjust for faster generation
+                num_beams=2,  # Use beam search with fewer beams for faster results
+            )
 
-        # Decode and display the results
-        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        st.write(response)
+            # Decode and store the response
+            response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+            responses.append(response)
+
+        # Combine responses and display them
+        combined_response = "\n".join(responses)
+        clean_response = combined_response.replace("### Instruction and Input:", "").replace("### Response:", "").strip()
+
+        st.write(clean_response)
     else:
         st.sidebar.error("Please upload a PDF file and enter a query.")
 
