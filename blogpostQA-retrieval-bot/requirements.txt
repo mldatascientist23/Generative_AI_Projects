@@ -1,0 +1,9 @@
+streamlit
+langchain
+langchain-chroma
+langchain-community
+langchain-groq
+sentence-transformers
+bs4
+torch
+protobuf
