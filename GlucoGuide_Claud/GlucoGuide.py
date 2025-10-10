@@ -113,7 +113,7 @@ st.markdown(
     """
     <div class="header">
         <p class="creator">Created by <strong>Engr. Hamesh Raj</strong></p>
-        <p class="creator"><a href="https://www.linkedin.com/in/datascientisthameshraj/" target="_blank">Connect with me on LinkedIn</a></p>
+       
     </div>
     """, unsafe_allow_html=True
 )
